@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log-in</title>
+    <link rel="stylesheet" href="css/signin.css" />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="wrapper">
+      <form id="login-form">
+        <h1>Login</h1>
+        <div class="input-box">
+          <input type="email" id="login-email" placeholder="Email" required />
+          <i class="bx bxs-user"></i>
+        </div>
+        <div class="input-box">
+          <input
+            type="password"
+            id="login-password"
+            placeholder="Password"
+            required
+          />
+          <i class="bx bxs-lock"></i>
+        </div>
+        <div class="remember-forgot">
+          <label><input type="checkbox" />Remember Me</label>
+          <a href="#">Forgot Password</a>
+        </div>
+        <button type="submit" class="btn">Log In</button>
+        <div class="register-link">
+          <p>Don't have an account? <a href="signup.html">Register</a></p>
+        </div>
+      </form>
+    </div>
+
+    <script type="module">
+      // Import Firebase modules
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        get,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+      import {
+        getAuth,
+        signInWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBGZDCphcVOI-CX808hT47KAgihFI2LOaE",
+        authDomain: "iasdb-f3496.firebaseapp.com",
+        databaseURL:
+          "https://iasdb-f3496-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "iasdb-f3496",
+        storageBucket: "iasdb-f3496.appspot.com",
+        messagingSenderId: "468474107017",
+        appId: "1:468474107017:web:98677254871c76110d6258",
+        measurementId: "G-FLQ1YMY8VQ",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const database = getDatabase(app);
+      const auth = getAuth(app);
+
+      // SHA-256 hashing function
+      async function hashPassword(password) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(password);
+        const hash = await crypto.subtle.digest("SHA-256", data);
+        return Array.from(new Uint8Array(hash))
+          .map((byte) => byte.toString(16).padStart(2, "0"))
+          .join("");
+      }
+
+      // Reference to the login form element
+      const loginForm = document.getElementById("login-form");
+
+      // Login form submit event listener
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Get user input values
+        const email = document.getElementById("login-email").value;
+        const password = document.getElementById("login-password").value;
+
+        try {
+          // Hash the password
+          const hashedPassword = await hashPassword(password);
+
+          // Sign in user with email and hashed password
+          const userCredential = await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+
+          // Get the user object from the userCredential
+          const user = userCredential.user;
+
+          // Retrieve user data from database
+          const userSnapshot = await get(
+            ref(database, "users/" + user.uid + "/acc")
+          );
+          const userData = userSnapshot.val();
+
+          if (userData && userData.password === hashedPassword) {
+            alert("Login successful! Welcome " + userData.fullName);
+            window.location.href = "homepage.html";
+          } else {
+            alert("Incorrect password!");
+          }
+        } catch (error) {
+          alert(error.message);
+        }
+      });
+    </script>
+  </body>
+</html>

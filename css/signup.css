@@ -1,0 +1,9 @@
+.wrapper {
+  width: 500px;
+}
+.input-box {
+  display: flex;
+}
+.input-form {
+  width: 420px;
+}

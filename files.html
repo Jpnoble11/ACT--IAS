@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Files</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+      integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/boxicons@latest/css/boxicons.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&family=Rubik:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/navbar.css" />
+    <link rel="stylesheet" href="css/home.css" />
+    <link rel="stylesheet" href="css/enc.css" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <header>
+      <div class="container">
+        <h2><span>JPN</span></h2>
+        <div class="navbar">
+          <nav>
+            <ul>
+              <li>
+                <a href="#" class="nav-icon">
+                  <i class="uil uil-estate"></i> Home
+                </a>
+              </li>
+              <li>
+                <a href="./encrypt.html" class="nav-icon">
+                  <i class="uil uil-user"></i> Encrypt
+                </a>
+              </li>
+              <li>
+                <a href="./decrypt.html" class="nav-icon">
+                  <i class="uil uil-file-alt"></i> Decrypt
+                </a>
+              </li>
+              <li>
+                <a href="./files.html" class="nav-icon">
+                  <i class="uil uil-message"></i> Files
+                </a>
+              </li>
+              <li>
+                <a href="./contact.html" class="nav-icon">
+                  <i class="uil uil-message"></i> Contact Me
+                </a>
+              </li>
+              <li>
+                <a href="./" class="nav-icon">
+                  <i class="uil uil-message"></i> Log Out
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <button class="hamburger">
+          <div class="bar"></div>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+      <a href="#">Home</a>
+      <a href="./encrypt.html">Encrypt</a>
+      <a href="./decrypt.html">Decrypt</a>
+      <a href="./files.html">Files</a>
+      <a href="./contact.html">Contact Me</a>
+      <a href="./">Log Out</a>
+    </nav>
+
+    <!-- Main Content Section -->
+    <section class="enc">
+      <div class="container">
+        <h2>Manage Files</h2>
+        <!-- Upload Section -->
+        <div class="upload-section">
+          <h3>Upload File</h3>
+          <form id="uploadForm">
+            <label for="fileInput">Select File:</label>
+            <input type="file" id="fileInput" name="fileInput" required />
+            <br />
+            <button type="submit">Upload File</button>
+          </form>
+          <div id="uploadResult"></div>
+        </div>
+        <!-- File List Section -->
+        <div class="file-list">
+          <h3>Files</h3>
+          <ul id="fileList"></ul>
+        </div>
+      </div>
+    </section>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+      integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const firebaseConfig = {
+          apiKey: "AIzaSyBGZDCphcVOI-CX808hT47KAgihFI2LOaE",
+          authDomain: "iasdb-f3496.firebaseapp.com",
+          databaseURL:
+            "https://iasdb-f3496-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "iasdb-f3496",
+          storageBucket: "iasdb-f3496.appspot.com",
+          messagingSenderId: "468474107017",
+          appId: "1:468474107017:web:98677254871c76110d6258",
+          measurementId: "G-FLQ1YMY8VQ",
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage();
+        const database = firebase.database();
+
+        // Reference to the currently logged-in user (replace with your actual logic to get user email)
+        const userEmail = "user@example.com"; // Example user email or retrieve dynamically
+
+        // File Upload Form
+        const uploadForm = document.getElementById("uploadForm");
+        const fileInput = document.getElementById("fileInput");
+        const uploadResult = document.getElementById("uploadResult");
+
+        uploadForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const file = fileInput.files[0];
+          if (!file) {
+            alert("Please select a file to upload.");
+            return;
+          }
+
+          try {
+            // Upload file to Firebase Storage
+            const storageRef = storage.ref();
+            const fileRef = storageRef.child(file.name);
+            const snapshot = await fileRef.put(file);
+
+            // Get download URL
+            const downloadURL = await snapshot.ref.getDownloadURL();
+
+            // Save file metadata to Realtime Database
+            const userFilesRef = database.ref(
+              "files/" + userEmail.replace(".", "_")
+            );
+            await userFilesRef.push({
+              fileName: file.name,
+              downloadURL: downloadURL,
+              uploadedAt: firebase.database.ServerValue.TIMESTAMP,
+            });
+
+            // Clear file input field and show success message
+            fileInput.value = null;
+            uploadResult.innerHTML = `<p>File uploaded successfully!</p>`;
+          } catch (error) {
+            console.error("Error uploading file:", error);
+            uploadResult.innerHTML = `<p>Error uploading file: ${error.message}</p>`;
+          }
+        });
+
+        // Function to display uploaded files
+        function displayUploadedFiles() {
+          const userFilesRef = database.ref(
+            "files/" + userEmail.replace(".", "_")
+          );
+          userFilesRef.on("value", (snapshot) => {
+            const fileList = snapshot.val();
+            if (fileList) {
+              const filesHtml = Object.keys(fileList)
+                .map((key) => {
+                  const file = fileList[key];
+                  return `<li><a href="${file.downloadURL}" target="_blank">${file.fileName}</a></li>`;
+                })
+                .join("");
+              document.getElementById("fileList").innerHTML = filesHtml;
+            } else {
+              document.getElementById("fileList").innerHTML =
+                "<li>No files uploaded.</li>";
+            }
+          });
+        }
+
+        // Call function to display uploaded files on page load
+        displayUploadedFiles();
+      });
+    </script>
+  </body>
+</html>
