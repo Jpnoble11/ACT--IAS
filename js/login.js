@@ -1,4 +1,3 @@
-// Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   getDatabase,
@@ -28,16 +27,6 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
 
-// SHA-256 hashing function
-async function hashPassword(password) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hash = await crypto.subtle.digest("SHA-256", data);
-  return Array.from(new Uint8Array(hash))
-    .map((byte) => byte.toString(16).padStart(2, "0"))
-    .join("");
-}
-
 // Reference to the login form element
 const loginForm = document.getElementById("login-form");
 
@@ -50,10 +39,7 @@ loginForm.addEventListener("submit", async (e) => {
   const password = document.getElementById("login-password").value;
 
   try {
-    // Hash the password
-    const hashedPassword = await hashPassword(password);
-
-    // Sign in user with email and hashed password
+    // Sign in user with email and password
     const userCredential = await signInWithEmailAndPassword(
       auth,
       email,
@@ -63,15 +49,18 @@ loginForm.addEventListener("submit", async (e) => {
     // Get the user object from the userCredential
     const user = userCredential.user;
 
+    // Store user email in localStorage
+    localStorage.setItem("userEmail", email);
+
     // Retrieve user data from database
     const userSnapshot = await get(ref(database, "users/" + user.uid + "/acc"));
     const userData = userSnapshot.val();
 
-    if (userData && userData.password === hashedPassword) {
+    if (userData) {
       alert("Login successful! Welcome " + userData.fullName);
       window.location.href = "homepage.html";
     } else {
-      alert("Incorrect password!");
+      alert("User data not found!");
     }
   } catch (error) {
     alert(error.message);
