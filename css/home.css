@@ -16,13 +16,19 @@ body {
   background-position: center;
 }
 .content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 90%;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  color: #fff;
+  border-radius: 12px;
+  padding: 70px;
   text-align: center;
-  height: 100vh;
-  color: white;
+  color: #fff;
 }
 
 .content h1 {
