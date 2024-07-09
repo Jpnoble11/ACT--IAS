@@ -3,45 +3,67 @@
 :root {
   --bg-color: #353b48;
 }
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
+
+html,
 body {
-  min-height: 100vh;
+  height: 100%;
+}
+
+body {
   background: url(imgbg/bg.jpg) no-repeat;
   background-size: cover;
   background-position: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .contact {
-  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.contact h1 {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 #contact-container {
-  align-items: center;
-  margin-top: 150px;
   display: flex;
-  max-width: 1900px;
-  width: 97%;
-  height: 60vh;
+  flex-wrap: wrap;
+  max-width: 1000px;
+  width: 100%;
+  height: auto;
+  padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
-#contact-form {
+#contact-form,
+#contact-info {
   flex: 1;
-  padding: 10px 30px;
-  color: #fff;
+  padding: 20px;
   backdrop-filter: blur(10px);
   border-radius: 5%;
-}
-
-#contact-form h1 {
-  color: #fff;
-  margin-bottom: 10px;
 }
 
 #contact-form label {
@@ -62,7 +84,7 @@ body {
 #contact-form input[type="submit"] {
   background-color: black;
   color: #fff;
-  padding: 20px 20px;
+  padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -75,17 +97,8 @@ body {
   border: 1px solid black;
 }
 
-#contact-info {
-  margin-left: 20px;
-  flex: 1;
-  padding: 150px 10px;
-  color: #fff;
-  backdrop-filter: blur(10px);
-  border-radius: 5%;
-}
-
 #contact-info h2 {
-  padding-bottom: 30px;
+  margin-bottom: 30px;
 }
 
 .social-icons {
@@ -93,13 +106,18 @@ body {
 }
 
 .social-icons a {
-  margin-top: 10px;
   margin-right: 10px;
   color: #fff;
-  font-size: 50px;
+  font-size: 30px;
   transition: color 0.3s ease;
 }
 
 .social-icons a:hover {
-  color: #fff;
+  color: #ccc;
+}
+
+footer {
+  color: white;
+  text-align: center;
+  margin-top: 20px;
 }
