@@ -75,7 +75,7 @@ signupForm.addEventListener("submit", async (e) => {
 
     // Redirect or show success message
     alert("User signed up successfully!");
-    window.location.href = "index.html";
+    window.location.href = "./";
   } catch (error) {
     if (error.code === "auth/email-already-in-use") {
       alert("The email address is already in use by another account.");
