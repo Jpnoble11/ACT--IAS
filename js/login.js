@@ -1,3 +1,4 @@
+document.cookie = "userEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   getDatabase,
@@ -49,8 +50,8 @@ loginForm.addEventListener("submit", async (e) => {
     // Get the user object from the userCredential
     const user = userCredential.user;
 
-    // Store user email in localStorage
-    localStorage.setItem("userEmail", email);
+    // Store user email in a cookie
+    document.cookie = `userEmail=${email}; path=/`;
 
     // Retrieve user data from database
     const userSnapshot = await get(ref(database, "users/" + user.uid + "/acc"));

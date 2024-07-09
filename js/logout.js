@@ -1,33 +1,27 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Check if user email is stored in localStorage
-  const userEmail = localStorage.getItem("userEmail");
-
   // Get the Log Out link element
-  const logoutLink = document.querySelector(".navbar ul li:last-child a");
+  const logoutLinks = document.querySelectorAll(
+    "#logout-link, #mobile-logout-link"
+  );
 
-  if (userEmail) {
-    // User is logged in, show Log Out link
-    logoutLink.style.display = "block";
-  } else {
-    // User is not logged in, hide Log Out link
-    logoutLink.style.display = "none";
-  }
+  // Add event listener for Log Out links
+  logoutLinks.forEach((logoutLink) => {
+    logoutLink.addEventListener("click", function (event) {
+      // Prevent default link behavior
+      event.preventDefault();
 
-  // Add event listener for Log Out link
-  logoutLink.addEventListener("click", function (event) {
-    // Prevent default link behavior
-    event.preventDefault();
+      // Confirm logout
+      const confirmLogout = confirm("Are you sure you want to log out?");
 
-    // Confirm logout
-    const confirmLogout = confirm("Are you sure you want to log out?");
+      if (confirmLogout) {
+        // Clear session cookie
+        document.cookie =
+          "userEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
-    if (confirmLogout) {
-      // Clear userEmail from localStorage
-      localStorage.removeItem("userEmail");
-
-      // Optionally, redirect to login page or perform other logout actions
-      alert("Logged out successfully!");
-      window.location.href = "./"; // Redirect to login page after logout
-    }
+        // Optionally, redirect to login page or perform other logout actions
+        alert("Logged out successfully!");
+        window.location.href = "login.html"; // Redirect to login page after logout
+      }
+    });
   });
 });
