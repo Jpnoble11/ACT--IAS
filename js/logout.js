@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Optionally, redirect to login page or perform other logout actions
         alert("Logged out successfully!");
-        window.location.href = "./login"; // Redirect to login page after logout
+        window.location.href = "./"; // Redirect to login page after logout
       } else {
         // User canceled the logout
         alert("Logout canceled.");
