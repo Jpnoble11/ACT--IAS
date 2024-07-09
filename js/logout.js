@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
           "userEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         // Optionally, redirect to login page or perform other logout actions
         alert("Logged out successfully!");
-        window.location.href = "./index"; // Redirect to login page after logout
+        window.location.href = "./"; // Redirect to login page after logout
       } else {
         // User canceled the logout
         alert("Logout canceled.");
