@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Get the Log Out link element
+  // Get the Log Out link elements
   const logoutLinks = document.querySelectorAll(
     "#logout-link, #mobile-logout-link"
   );
@@ -21,6 +21,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // Optionally, redirect to login page or perform other logout actions
         alert("Logged out successfully!");
         window.location.href = "login.html"; // Redirect to login page after logout
+      } else {
+        // User canceled the logout
+        alert("Logout canceled.");
       }
     });
   });
