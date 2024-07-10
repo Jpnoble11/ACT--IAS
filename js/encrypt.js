@@ -10,35 +10,7 @@ document.getElementById("cancelButton").addEventListener("click", function () {
   resetForm();
 });
 
-function encryptFile(content, key, originalFileName) {
-  let confirmed = confirm("Are you sure you want to encrypt this file?");
-  if (!confirmed) {
-    return;
-  }
-
-  let encryptedContent = encrypt(content, key);
-
-  // Create a Blob from the content
-  const blob = new Blob([encryptedContent], {
-    type: "application/octet-stream",
-  });
-
-  // Append .enc to the original file name
-  const encryptedFileName = originalFileName + ".encrypted";
-
-  // Create a temporary anchor element to trigger the download
-  const downloadLink = document.getElementById("downloadLink");
-  downloadLink.href = URL.createObjectURL(blob);
-  downloadLink.download = encryptedFileName;
-  downloadLink.style.display = "block"; // Show the download button
-
-  // Alert when download link is clicked
-  downloadLink.addEventListener("click", function () {
-    alert("Downloading encrypted file...");
-  });
-}
-
-function encrypt(content, key) {
+function encryptFile(content, key, originalFileName, callback) {
   const keyCharCode = key.charCodeAt(0); // Use the first character of the key for XOR
   const contentArray = new Uint8Array(content);
   const encryptedArray = new Uint8Array(contentArray.length);
@@ -47,7 +19,29 @@ function encrypt(content, key) {
     encryptedArray[i] = contentArray[i] ^ keyCharCode;
   }
 
-  return encryptedArray.buffer;
+  const blob = new Blob([encryptedArray], {
+    type: "application/octet-stream",
+  });
+
+  const encryptedFileName = originalFileName + ".enc";
+
+  const downloadLink = document.getElementById("downloadLink");
+  downloadLink.href = URL.createObjectURL(blob);
+  downloadLink.download = encryptedFileName;
+  downloadLink.style.display = "block";
+
+  // Set up event listener for download link click
+  downloadLink.addEventListener("click", function () {
+    const confirmDownload = confirm(
+      "File encrypted successfully! Do you want to download it?"
+    );
+    if (confirmDownload) {
+      // Call the callback to reset the form after download
+      callback();
+    } else {
+      event.preventDefault(); // Prevent the default action if not confirmed
+    }
+  });
 }
 
 // Example usage
@@ -62,7 +56,7 @@ document
     const reader = new FileReader();
     reader.onload = function (event) {
       const fileContent = event.target.result;
-      encryptFile(fileContent, encryptionKey, file.name);
+      encryptFile(fileContent, encryptionKey, file.name, resetForm);
       document.getElementById("encryptionResult").textContent =
         "File encrypted successfully!";
     };

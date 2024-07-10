@@ -11,14 +11,9 @@ document.getElementById("cancelButton").addEventListener("click", function () {
 });
 
 function decryptFile(content, key, originalFileName) {
-  let confirmed = confirm("Are you sure you want to decrypt this file?");
-  if (!confirmed) {
-    return;
-  }
-
   let decryptedContent = decrypt(content, key);
 
-  // Create a Blob from the content
+  // Create a Blob from the decrypted content
   const blob = new Blob([decryptedContent], {
     type: "application/octet-stream",
   });
@@ -32,9 +27,16 @@ function decryptFile(content, key, originalFileName) {
   downloadLink.download = originalFileNameWithoutEnc;
   downloadLink.style.display = "block"; // Show the download button
 
-  // Alert when download link is clicked
+  // Add an event listener to the download link for showing the alert and resetting the form
   downloadLink.addEventListener("click", function () {
-    alert("Downloading decrypted file...");
+    const confirmDownload = confirm(
+      `File '${originalFileNameWithoutEnc}' decrypted! Click OK to download.`
+    );
+    if (confirmDownload) {
+      resetForm(); // Reset the form after download
+    } else {
+      event.preventDefault(); // Prevent the download if cancelled
+    }
   });
 }
 
