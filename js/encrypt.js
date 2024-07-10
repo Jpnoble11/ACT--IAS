@@ -11,6 +11,11 @@ document.getElementById("cancelButton").addEventListener("click", function () {
 });
 
 function encryptFile(content, key, originalFileName) {
+  let confirmed = confirm("Are you sure you want to encrypt this file?");
+  if (!confirmed) {
+    return;
+  }
+
   let encryptedContent = encrypt(content, key);
 
   // Create a Blob from the content
@@ -26,6 +31,11 @@ function encryptFile(content, key, originalFileName) {
   downloadLink.href = URL.createObjectURL(blob);
   downloadLink.download = encryptedFileName;
   downloadLink.style.display = "block"; // Show the download button
+
+  // Alert when download link is clicked
+  downloadLink.addEventListener("click", function () {
+    alert("Downloading encrypted file...");
+  });
 }
 
 function encrypt(content, key) {

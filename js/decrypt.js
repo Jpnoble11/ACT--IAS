@@ -11,6 +11,11 @@ document.getElementById("cancelButton").addEventListener("click", function () {
 });
 
 function decryptFile(content, key, originalFileName) {
+  let confirmed = confirm("Are you sure you want to decrypt this file?");
+  if (!confirmed) {
+    return;
+  }
+
   let decryptedContent = decrypt(content, key);
 
   // Create a Blob from the content
@@ -26,6 +31,11 @@ function decryptFile(content, key, originalFileName) {
   downloadLink.href = URL.createObjectURL(blob);
   downloadLink.download = originalFileNameWithoutEnc;
   downloadLink.style.display = "block"; // Show the download button
+
+  // Alert when download link is clicked
+  downloadLink.addEventListener("click", function () {
+    alert("Downloading decrypted file...");
+  });
 }
 
 function decrypt(content, key) {
