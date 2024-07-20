@@ -3,23 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Encrypt Page</title>
+    <title>CONTACT</title>
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
       integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I"
       crossorigin="anonymous"
     />
-    <script
-      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
-      integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
-      crossorigin="anonymous"
-    ></script>
     <link
       rel="stylesheet"
       href="https://unpkg.com/boxicons@latest/css/boxicons.min.css"
@@ -31,8 +21,8 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/navbar.css" />
-    <link rel="stylesheet" href="css/home.css" />
-    <link rel="stylesheet" href="css/enc.css" />
+    <link rel="stylesheet" href="css/contact.css" />
+    <link rel="stylesheet" href="css/gallery.css" />
   </head>
   <body>
     <header>
@@ -48,19 +38,13 @@
                 </a>
               </li>
               <li>
-                <a href="#" class="nav-icon">
+                <a href="./gallery" class="nav-icon">
                   <i class="uil uil-user"></i>
-                  Encrypt
+                  Gallery
                 </a>
               </li>
               <li>
-                <a href="./decrypt" class="nav-icon">
-                  <i class="uil uil-file-alt"></i>
-                  Decrypt
-                </a>
-              </li>
-              <li>
-                <a href="./contact" class="nav-icon">
+                <a href="#" class="nav-icon">
                   <i class="uil uil-message"></i>
                   Contact Me
                 </a>
@@ -81,31 +65,32 @@
     </header>
     <nav class="mobile-nav">
       <a href="./homepage">Home</a>
-      <a href="#">Encrypt</a>
-      <a href="./decrypt">Decrypt</a>
+      <a href="#">Gallery </a>
       <a href="./contact">Contact Me</a>
       <a href="#" id="mobile-logout-link">Log Out</a>
     </nav>
-    <section class="enc">
-      <h3>File Encryption</h3>
-      <form id="encryptionForm">
-        <label for="fileInput">Select File:</label>
-        <input type="file" id="fileInput" name="fileInput" required />
-        <br />
-        <label for="encryptionKey">Encryption Key:</label>
-        <input type="text" id="encryptionKey" name="encryptionKey" required />
-        <br />
-        <button type="submit">Encrypt File</button>
-        <button type="button" id="cancelButton">Cancel</button>
-      </form>
-      <div id="encryptionResult"></div>
-      <a id="downloadLink" style="display: none" class="btn btn-primary mt-3"
-        >Download Encrypted File</a
-      >
+
+    <section class="Gallery">
+      <div class="container mt-5">
+        <h3>Upload an Image</h3>
+        <input
+          class="form-control"
+          type="file"
+          id="imageUpload"
+          accept="image/*"
+        />
+        <button id="uploadButton" class="btn btn-primary mt-3">Upload</button>
+        <div id="loadingIndicator" style="display: none">Uploading...</div>
+      </div>
     </section>
-    <script src="https://unpkg.com/scrollreveal"></script>
-    <script src="js/navbar.js"></script>
-    <script src="js/logout.js"></script>
-    <script src="js/encrypt.js"></script>
+
+    <section class="Gallery">
+      <div class="container mt-5">
+        <h3>Images</h3>
+        <div id="allImagesDisplay" class="mt-3"></div>
+      </div>
+    </section>
+
+    <script type="module" src="js/imagegallery.js"></script>
   </body>
 </html>

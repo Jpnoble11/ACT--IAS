@@ -1,0 +1,44 @@
+/* Styles for the gallery section */
+.Gallery {
+  padding: 50px 0;
+  text-align: center;
+  color: #fff;
+}
+
+.Gallery h3 {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  color: #fff;
+}
+
+.image-container {
+  display: inline-block;
+  margin: 15px;
+  position: relative;
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+  max-width: 300px;
+  border-radius: 12px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.image-container img:hover {
+  transform: scale(1.05);
+}
+
+.image-container .btn {
+  display: block;
+  margin-top: 10px;
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.centered-image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
