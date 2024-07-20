@@ -24,64 +24,29 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
-document.getElementById("uploadButton").addEventListener("click", async () => {
+document.getElementById("uploadButton").addEventListener("click", () => {
   const file = document.getElementById("imageUpload").files[0];
   if (file) {
-    try {
-      const encryptedBlob = await encryptFile(file, "9999"); // Replace 'your-secret-key' with your actual key
-      const storageRef = ref(storage, `Image Folders/${file.name}`);
-      document.getElementById("loadingIndicator").style.display = "block";
-      const snapshot = await uploadBytes(storageRef, encryptedBlob);
-      const downloadURL = await getDownloadURL(snapshot.ref);
-      document.getElementById("loadingIndicator").style.display = "none";
-      document.getElementById("imageUpload").value = "";
-      addImageToAllImagesDisplay(downloadURL, file.name);
-    } catch (error) {
-      document.getElementById("loadingIndicator").style.display = "none";
-      console.error("Upload failed:", error);
-    }
+    const storageRef = ref(storage, `Image Folders/${file.name}`);
+    document.getElementById("loadingIndicator").style.display = "block";
+    uploadBytes(storageRef, file)
+      .then((snapshot) => {
+        console.log("Uploaded a blob or file!");
+        return getDownloadURL(snapshot.ref);
+      })
+      .then((downloadURL) => {
+        document.getElementById("loadingIndicator").style.display = "none";
+        document.getElementById("imageUpload").value = "";
+        addImageToAllImagesDisplay(downloadURL, file.name);
+      })
+      .catch((error) => {
+        document.getElementById("loadingIndicator").style.display = "none";
+        console.error("Upload failed:", error);
+      });
   } else {
     alert("Please select a file first.");
   }
 });
-
-async function encryptFile(file, secretKey) {
-  const arrayBuffer = await file.arrayBuffer();
-  const cryptoKey = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(secretKey),
-    { name: "AES-GCM", length: 256 },
-    false,
-    ["encrypt"]
-  );
-  const iv = window.crypto.getRandomValues(new Uint8Array(12)); // Initialization Vector
-  const encryptedArrayBuffer = await crypto.subtle.encrypt(
-    { name: "AES-GCM", iv },
-    cryptoKey,
-    arrayBuffer
-  );
-  const encryptedBlob = new Blob([iv, encryptedArrayBuffer]); // Prepend IV to the encrypted data
-  return encryptedBlob;
-}
-
-async function decryptFile(encryptedBlob, secretKey) {
-  const arrayBuffer = await encryptedBlob.arrayBuffer();
-  const iv = arrayBuffer.slice(0, 12); // Extract IV
-  const encryptedData = arrayBuffer.slice(12); // Extract encrypted data
-  const cryptoKey = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(secretKey),
-    { name: "AES-GCM", length: 256 },
-    false,
-    ["decrypt"]
-  );
-  const decryptedArrayBuffer = await crypto.subtle.decrypt(
-    { name: "AES-GCM", iv },
-    cryptoKey,
-    encryptedData
-  );
-  return new Blob([decryptedArrayBuffer]);
-}
 
 function displayAllImages() {
   const storageRef = ref(storage, "Image Folders");
@@ -91,12 +56,9 @@ function displayAllImages() {
       res.items.forEach((itemRef) => {
         console.log("Found item:", itemRef.name);
         getDownloadURL(itemRef)
-          .then(async (downloadURL) => {
-            const response = await fetch(downloadURL);
-            const encryptedBlob = await response.blob();
-            const decryptedBlob = await decryptFile(encryptedBlob, "9999"); // Use the same secret key
-            const imageUrl = URL.createObjectURL(decryptedBlob);
-            addImageToAllImagesDisplay(imageUrl, itemRef.name);
+          .then((downloadURL) => {
+            console.log("Download URL:", downloadURL);
+            addImageToAllImagesDisplay(downloadURL, itemRef.name);
           })
           .catch((error) => {
             console.error("Error getting download URL:", error);
@@ -107,14 +69,13 @@ function displayAllImages() {
       console.error("Failed to list images:", error);
     });
 }
-
-function addImageToAllImagesDisplay(imageUrl, fileName) {
+function addImageToAllImagesDisplay(downloadURL, fileName) {
   const allImagesDisplay = document.getElementById("allImagesDisplay");
   const imageContainer = document.createElement("div");
   imageContainer.classList.add("image-container");
 
   const img = document.createElement("img");
-  img.src = imageUrl;
+  img.src = downloadURL;
   img.alt = fileName;
   img.classList.add("centered-image");
 
