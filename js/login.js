@@ -1,4 +1,4 @@
-document.cookie = "userEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+document.cookie = "userEmail=; expires=Thu, 01 Jan 2024 00:00:00 UTC; path=/;";
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
