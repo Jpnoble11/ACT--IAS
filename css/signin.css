@@ -103,17 +103,22 @@ body {
 }
 #google-login-btn {
   display: inline-block;
-  background-color: #4285f4;
-  color: white;
+  background-color: #fff;
+  color: #000;
   border: none;
   padding: 10px 20px;
   cursor: pointer;
   font-size: 16px;
   border-radius: 5px;
+  text-decoration: underline;
 }
 #google-login-btn i {
   margin-right: 10px;
 }
 #google-login-btn:hover {
-  background-color: #357ae8;
+  background-color: #fefefe;
+  text-decoration: none;
+}
+.btn {
+  background-color: #fff;
 }
