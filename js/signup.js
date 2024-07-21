@@ -83,13 +83,13 @@ signupForm.addEventListener("submit", async (e) => {
         displayPopup(
           "Your account has been verified. You have successfully signed up!",
           () => {
-            window.location.href = "signin.html";
+            window.location.href = "./signin";
           }
         );
       }
     }, 2000);
   } catch (error) {
-    if (error.code === "auth/email-already-in-use") {
+    if (error.code === "email already in use!") {
       alert("The email address is already in use by another account.");
       signupForm.reset();
     } else {
@@ -112,7 +112,7 @@ googleSignupBtn.addEventListener("click", async () => {
     if (userData) {
       if (userData.verified) {
         alert("Your Google account is already registered!");
-        window.location.href = "signin.html";
+        window.location.href = "./signin";
       } else {
         alert(
           "Your Google account is registered but not yet verified. Please check your email."
@@ -140,7 +140,7 @@ googleSignupBtn.addEventListener("click", async () => {
             displayPopup(
               "Your account has been verified. You have successfully signed up!",
               () => {
-                window.location.href = "signin.html";
+                window.location.href = "./signin";
               }
             );
           }
@@ -149,7 +149,7 @@ googleSignupBtn.addEventListener("click", async () => {
         displayPopup(
           "Your account has been verified. You have successfully signed up!",
           () => {
-            window.location.href = "signin.html";
+            window.location.href = "./signin";
           }
         );
       }

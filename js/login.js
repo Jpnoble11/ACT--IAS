@@ -52,7 +52,7 @@ loginForm.addEventListener("submit", async (e) => {
     if (userData) {
       if (userData.verified) {
         alert("Login successful! Welcome " + userData.fullName);
-        window.location.href = "homepage.html";
+        window.location.href = "./homepage";
       } else {
         alert(
           "Your account is not yet verified. Please check your email for the verification link."
@@ -63,7 +63,7 @@ loginForm.addEventListener("submit", async (e) => {
       alert("User data not found!");
     }
   } catch (error) {
-    alert(error.message);
+    alert("Error, Comeback Later.");
   }
 });
 
@@ -81,7 +81,7 @@ googleLoginBtn.addEventListener("click", async () => {
     if (userData) {
       if (userData.verified) {
         alert("Login successful! Welcome " + userData.fullName);
-        window.location.href = "homepage.html";
+        window.location.href = "./homepage";
       } else {
         alert(
           "Your account is not yet verified. Please check your email for the verification link."
@@ -92,6 +92,6 @@ googleLoginBtn.addEventListener("click", async () => {
       alert("User data not found!");
     }
   } catch (error) {
-    alert(error.message);
+    alert("Error, Comeback Later.");
   }
 });
