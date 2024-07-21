@@ -1,4 +1,5 @@
 document.cookie = "userEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   getDatabase,
@@ -8,9 +9,10 @@ import {
 import {
   getAuth,
   signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBGZDCphcVOI-CX808hT47KAgihFI2LOaE",
   authDomain: "iasdb-f3496.firebaseapp.com",
@@ -23,43 +25,69 @@ const firebaseConfig = {
   measurementId: "G-FLQ1YMY8VQ",
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
 
-// Reference to the login form element
 const loginForm = document.getElementById("login-form");
 
-// Login form submit event listener
 loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  // Get user input values
   const email = document.getElementById("login-email").value;
   const password = document.getElementById("login-password").value;
 
   try {
-    // Sign in user with email and password
     const userCredential = await signInWithEmailAndPassword(
       auth,
       email,
       password
     );
 
-    // Get the user object from the userCredential
     const user = userCredential.user;
 
-    // Store user email in a cookie
-    document.cookie = `userEmail=${email}; path=/`;
-
-    // Retrieve user data from database
     const userSnapshot = await get(ref(database, "users/" + user.uid + "/acc"));
     const userData = userSnapshot.val();
 
     if (userData) {
-      alert("Login successful! Welcome " + userData.fullName);
-      window.location.href = "homepage.html";
+      if (userData.verified) {
+        alert("Login successful! Welcome " + userData.fullName);
+        window.location.href = "homepage.html";
+      } else {
+        alert(
+          "Your account is not yet verified. Please check your email for the verification link."
+        );
+        await auth.signOut();
+      }
+    } else {
+      alert("User data not found!");
+    }
+  } catch (error) {
+    alert(error.message);
+  }
+});
+
+const googleProvider = new GoogleAuthProvider();
+const googleLoginBtn = document.getElementById("google-login-btn");
+
+googleLoginBtn.addEventListener("click", async () => {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+
+    const userSnapshot = await get(ref(database, "users/" + user.uid + "/acc"));
+    const userData = userSnapshot.val();
+
+    if (userData) {
+      if (userData.verified) {
+        alert("Login successful! Welcome " + userData.fullName);
+        window.location.href = "homepage.html";
+      } else {
+        alert(
+          "Your account is not yet verified. Please check your email for the verification link."
+        );
+        await auth.signOut();
+      }
     } else {
       alert("User data not found!");
     }

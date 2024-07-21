@@ -97,3 +97,23 @@ body {
 .register-link p a:hover {
   text-decoration: underline;
 }
+#google-login {
+  margin-top: 20px;
+  text-align: center;
+}
+#google-login-btn {
+  display: inline-block;
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+}
+#google-login-btn i {
+  margin-right: 10px;
+}
+#google-login-btn:hover {
+  background-color: #357ae8;
+}
