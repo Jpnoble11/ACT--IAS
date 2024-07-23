@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", function () {
       if (confirmLogout) {
         document.cookie =
           "userEmail=; expires=Thu, 01 Jan 2024 00:00:00 UTC; path=/;";
-
         alert("Logged out successfully!");
         window.location.href = "./signin";
       } else {
